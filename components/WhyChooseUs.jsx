@@ -20,17 +20,14 @@ export const WhyChooseUs = () => {
           
           {/* This is our new Accordion list */}
           <div className="mt-12 space-y-2">
-            <AccordionItem title="We Think Differently">
-              Lorem ipsum nibh vel velit auctor aliquet. Aenean sollic
-              tudin, lorem is simply free text quis bibendum.
+            <AccordionItem title="Premium Quality Materials">
+              We offer cutting-edge lighting designs that seamlessly blend aesthetics with functionality. Every product is carefully crafted to enhance spaces while maintaining energy efficiency and reliability.
             </AccordionItem>
-            <AccordionItem title="High Quality Projects">
-              Lorem ipsum nibh vel velit auctor aliquet. Aenean sollic
-              tudin, lorem is simply free text quis bibendum.
+            <AccordionItem title="Innovative Design Expertise">
+              With a team of creative lighting specialists and designers, we deliver bespoke solutions tailored to architectural visions, ensuring that every light accentuates your space’s uniqueness.
             </AccordionItem>
-            <AccordionItem title="Super Expert Team Members">
-              Lorem ipsum nibh vel velit auctor aliquet. Aenean sollic
-              tudin, lorem is simply free text quis bibendum.
+            <AccordionItem title="Trusted by Professionals">
+             Architects, interior designers, and businesses choose us for our reliability, precision, and aesthetic excellence. We deliver lighting solutions that stand the test of time and trends.
             </AccordionItem>
           </div>
         </div>
