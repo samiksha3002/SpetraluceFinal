@@ -8,8 +8,9 @@ import { useState } from 'react'; // <-- 2. IMPORTED useState
 // Add the paths to all your hero videos from the /public folder here
 const videos = [
   '/home.mp4',
-  '/home2.mp4',
-  '/home4.mp4',
+  '/HomeFinal2.mp4',
+  '/HomeFinal3.mp4',
+  '/HomeFinal4.mp4',
   // You can add a fourth one here: '/video4.mp4'
 ];
 
