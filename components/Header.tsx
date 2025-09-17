@@ -27,13 +27,13 @@ const TopBar = ({ isScrolled }) => {
           href="/products" 
           className={`uppercase tracking-wider underline ${hoverColorClass} transition-colors`}
         >
-          Discover our lighting & furniture collection
+         Designing with light for modern living
         </Link>
         <Link 
           href="/sale" 
           className={`uppercase tracking-wider underline ${hoverColorClass} transition-colors mt-1 md:mt-0`}
         >
-          Enjoy our Fall Sale
+          Contact Info – +39 345 588 2002
         </Link>
       </div>
     </div>

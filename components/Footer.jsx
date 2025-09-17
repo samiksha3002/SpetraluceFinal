@@ -1,6 +1,6 @@
 // app/components/Footer.jsx
 import Link from 'next/link';
-import Image from 'next/image'; // <-- Import the Image component
+import Image from 'next/image';
 
 // A small, reusable component for social media icons
 const SocialIcon = ({ href, children }) => (
@@ -37,20 +37,31 @@ export const Footer = () => {
                 src="/Logo.png" 
                 alt="Spetraluce Logo"
                 width={200} // Adjust width
-                height={40} // Adjust height
+                height={70} // Adjust height
                 className="h-10 w-auto" // Tailwind classes for sizing
               />
             </Link>
             <p className="mt-6 text-base max-w-sm">
-              Our mission is to bring elegant, aesthetic, and functional light
-              to every space, from the home to the industrial workplace.
+             Shaping spaces with light — premium architectural lighting crafted to enhance modern living.
+Blending design and function, we create luminous environments that elevate comfort and style.
             </p>
             {/* Larger font for contact info */}
             <div className="mt-8">
               <a href="mailto:info@spetraluce.com" className="text-lg font-medium text-white hover:text-gray-300 transition-colors">
                 info@spetraluce.com
               </a>
-              <p className="mt-2 text-lg font-medium text-white">+1 (234) 567-890</p>
+              {/* === PERFECTED MOBILE NUMBERS === */}
+              <div className="mt-4 flex flex-col md:flex-row md:space-x-4">
+                <a href="tel:+393455882002" className="text-lg font-medium text-white hover:text-gray-300 transition-colors">
+                  +39 345 588 2002
+                </a>
+                <a href="tel:+96566612349" className="text-lg font-medium text-white hover:text-gray-300 transition-colors md:mt-0 mt-2">
+                  +965 6661 2349
+                </a>
+                <a href="tel:+96598518951" className="text-lg font-medium text-white hover:text-gray-300 transition-colors md:mt-0 mt-2">
+                  +965 9851 8951
+                </a>
+              </div>
             </div>
             {/* Social Icons */}
             <div className="mt-8 flex space-x-5">
