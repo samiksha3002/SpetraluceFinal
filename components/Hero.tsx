@@ -1,27 +1,38 @@
 // app/components/Hero.jsx
-"use client"; // <-- 1. CONVERTED TO A CLIENT COMPONENT
+"use client";
 
 import Link from 'next/link';
-import { useState } from 'react'; // <-- 2. IMPORTED useState
+import { useState, useEffect } from 'react';
 
-// --- 3. YOUR VIDEO PLAYLIST ---
-// Add the paths to all your hero videos from the /public folder here
+// --- YOUR VIDEO PLAYLIST ---
 const videos = [
   '/home.mp4',
   '/HomeFinal2.mp4',
   '/HomeFinal3.mp4',
   '/HomeFinal4.mp4',
-  // You can add a fourth one here: '/video4.mp4'
 ];
 
 export const Hero = () => {
-  // 4. Set up state to track which video index is playing
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
-  // 5. This function runs when a video finishes
+  // This useEffect hook handles preloading the next video
+  useEffect(() => {
+    // Determine the index of the next video to preload
+    const nextVideoIndex = (currentVideoIndex + 1) % videos.length;
+    const nextVideoSrc = videos[nextVideoIndex];
+
+    // Create a new video element and set its source to preload it
+    const preloader = new Image(); // Using Image as a simple fetcher
+    preloader.src = nextVideoSrc;
+    
+    // Clean up the preloader to prevent memory leaks
+    return () => {
+      preloader.src = '';
+    };
+  }, [currentVideoIndex]); // Re-run this effect whenever the video index changes
+
   const handleVideoEnd = () => {
     // It updates the index to the next video in the 'videos' array
-    // The '%' (modulo) operator makes it loop back to 0 when it reaches the end
     setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
   };
 
@@ -29,29 +40,23 @@ export const Hero = () => {
     // This main container is full-screen and relative
     <section className="relative h-screen w-full overflow-hidden">
       
-      {/* === THIS IS THE UPDATED VIDEO TAG ===
-      */}
-      <video 
-        // 6. This 'key' is critical. It tells React to create a *new*
-        //    video element when the index changes, which guarantees autoplay.
+      {/* === THE VIDEO PLAYER === */}
+      <video
         key={currentVideoIndex}
-        autoPlay 
-        muted 
-        playsInline 
-        onEnded={handleVideoEnd} // <-- 7. Calls our function when the video ends
+        autoPlay
+        muted
+        playsInline
+        onEnded={handleVideoEnd}
         className="absolute z-0 w-full h-full object-cover"
-        src={videos[currentVideoIndex]} // <-- 8. Sets the 'src' from our state
+        src={videos[currentVideoIndex]}
       >
-        {/* We removed the <source> tag because 'src' is now on the <video> tag */}
         Your browser does not support the video tag.
       </video>
 
-
-      {/* Dark Overlay (This part is unchanged) */}
+      {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/60 z-10"></div>
 
-
-      {/* HERO CONTENT (This part is unchanged) */}
+      {/* HERO CONTENT */}
       <div className="relative z-20 flex flex-col items-center justify-center 
                       h-full text-center text-white px-6">
         
