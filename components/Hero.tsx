@@ -7,9 +7,9 @@ import { useState, useEffect } from 'react';
 // --- YOUR VIDEO PLAYLIST ---
 const videos = [
   '/home.mp4',
-  '/Homefinal2.mp4',
-  '/Homefinal3.mp4',
-  '/Homefinal4.mp4',
+  '/home2.mp4',
+  '/home3.mp4',
+  '/home4.mp4',
 ];
 
 export const Hero = () => {
