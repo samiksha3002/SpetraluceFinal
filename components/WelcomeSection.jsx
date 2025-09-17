@@ -40,7 +40,7 @@ export const WelcomeSection = () => {
               <Image
                 // --- IMPORTANT ---
                 // Add your DETAIL image to your /public folder and update this path
-                src="/Trial1.jpg" 
+                src="/trial1.jpg" 
                 alt="Close-up of a Spetraluce light fixture"
                 fill
                 sizes="(max-width: 768px) 50vw, (max-width: 1024px) 60vw, 30vw"
