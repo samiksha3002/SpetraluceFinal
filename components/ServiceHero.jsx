@@ -10,7 +10,7 @@ export const ServiceHero = () => {
       <Image
         // --- IMPORTANT ---
         // Add your new hero image to /public and update this path
-        src="/ProductHero.png" 
+        src="/ServiceHeroF.png" 
         alt="Elegant architectural interior with modern lighting"
         fill
         sizes="100vw"

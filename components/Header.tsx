@@ -1,23 +1,19 @@
-// app/components/Header.jsx
+// app/components/Header.tsx
 "use client"; 
 
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
-import { ThemeSwitcher } from './ThemeSwitcher'; 
+// We have REMOVED useTheme and ThemeSwitcher
 
 // --- SUB-COMPONENTS ---
 
-// 1. TOP BAR
-const TopBar = ({ isScrolled }) => {
-  const textColorClass = isScrolled 
-    ? "text-gray-700 dark:text-gray-300" 
-    : "text-gray-300";
-  const hoverColorClass = isScrolled
-    ? "hover:text-black dark:hover:text-white"
-    : "hover:text-white";
-  const bgClass = isScrolled ? 'bg-white dark:bg-black' : 'bg-black';
+// 1. TOP BAR (Updated for Light Mode only)
+const TopBar = ({ isScrolled }: { isScrolled: boolean }) => {
+  // Logic is simpler: just white or black background
+  const textColorClass = isScrolled ? "text-gray-700" : "text-gray-300";
+  const hoverColorClass = isScrolled ? "hover:text-black" : "hover:text-white";
+  const bgClass = isScrolled ? 'bg-white' : 'bg-black';
 
   return (
     <div className={`text-xs py-2.5 px-6 transition-colors duration-300 ${bgClass}`}>
@@ -27,24 +23,24 @@ const TopBar = ({ isScrolled }) => {
           href="/products" 
           className={`uppercase tracking-wider underline ${hoverColorClass} transition-colors`}
         >
-         Designing with light for modern living
+          Discover our lighting & furniture collection
         </Link>
         <Link 
           href="/sale" 
           className={`uppercase tracking-wider underline ${hoverColorClass} transition-colors mt-1 md:mt-0`}
         >
-          Contact Info – +39 345 588 2002
+          Enjoy our Fall Sale
         </Link>
       </div>
     </div>
   );
 };
 
-// 2. SEARCH BAR
-const SearchBar = ({ isScrolled }) => {
+// 2. SEARCH BAR (Updated for Light Mode only)
+const SearchBar = ({ isScrolled }: { isScrolled: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
   const iconColorClass = isScrolled 
-    ? "text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
+    ? "text-gray-700 hover:text-black"
     : "text-gray-300 hover:text-white";
 
   if (isOpen) {
@@ -54,7 +50,7 @@ const SearchBar = ({ isScrolled }) => {
           type="text" 
           placeholder="Search..." 
           autoFocus
-          className="pl-4 pr-10 py-2 w-48 text-sm bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300" 
+          className="pl-4 pr-10 py-2 w-48 text-sm bg-gray-100 text-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300" 
         />
         <button 
           onClick={() => setIsOpen(false)} 
@@ -88,8 +84,9 @@ export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const { theme } = useTheme(); 
+  // We have REMOVED 'useTheme'
 
+  // Scroll logic is unchanged
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -105,8 +102,9 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
+  // Link color logic is now SIMPLER
   const linkColorClass = isScrolled
-    ? "text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
+    ? "text-gray-700 hover:text-black"
     : "text-gray-300 hover:text-white";
 
   return (
@@ -121,42 +119,45 @@ export const Header = () => {
       <nav className={`container mx-auto px-6 py-4 
                       grid grid-cols-3 items-center 
                       transition-colors duration-300
-                      ${isScrolled ? 'bg-white/80 backdrop-blur-md dark:bg-black/80' : 'bg-transparent'}`}>
+                      ${isScrolled ? 'bg-white/80 backdrop-blur-md' : 'bg-transparent'}`}> {/* <-- REMOVED dark: classes */}
         
-        <div className="justify-self-start flex items-center gap-4">
+        {/* === UPDATED LEFT SIDE === */}
+        {/* We have REMOVED the ThemeSwitcher */}
+        <div className="justify-self-start">
           <SearchBar isScrolled={isScrolled} />
-          <ThemeSwitcher isScrolled={isScrolled} /> 
-          
         </div>
 
+        {/* === MIDDLE: LOGO SWAPPER (Updated logic) === */}
         <div className="justify-self-center">
           <Link href="/">
+            {/* BLACK LOGO (Visible when scrolled) */}
             <Image
               src="/Logo.png" 
               alt="Spetraluce Logo"
               width={220}
               height={80}
               priority
-              className={`${isScrolled && theme === 'light' ? 'block' : 'hidden'}`}
+              className={`${isScrolled ? 'block' : 'hidden'}`} // Logic is simpler
             />
+            
+            {/* WHITE LOGO (Visible at top) */}
             <Image
               src="/Logo.png" 
               alt="Spetraluce Logo"
               width={220}
               height={80}
               priority
-              className={`${isScrolled && theme === 'light' ? 'hidden' : 'block'}`}
+              className={`${isScrolled ? 'hidden' : 'block'}`} // Logic is simpler
             />
           </Link>
         </div>
 
-        {/* === UPDATED RIGHT SIDE === */}
+        {/* === RIGHT: Nav Items === */}
         <div className="justify-self-end">
           <ul className="hidden md:flex items-center space-x-8">
-            {/* Added 'whitespace-nowrap' to every link to stop word wrapping */}
             <li><Link href="/" className={`text-base font-medium ${linkColorClass} transition-colors whitespace-nowrap`}>Home</Link></li>
             <li><Link href="/about" className={`text-base font-medium ${linkColorClass} transition-colors whitespace-nowrap`}>About Us</Link></li>
-            <li><Link href="/products" className={`text-base font-medium ${linkColorClass} transition-colors whitespace-nowrap`}>Products</Link></li>
+            <li><Link href="/productcategory" className={`text-base font-medium ${linkColorClass} transition-colors whitespace-nowrap`}>Products</Link></li>
             <li><Link href="/services" className={`text-base font-medium ${linkColorClass} transition-colors whitespace-nowrap`}>Our Services</Link></li>
             <li><Link href="/contact" className={`text-base font-medium ${linkColorClass} transition-colors whitespace-nowrap`}>Contact us</Link></li>
           </ul>

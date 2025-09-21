@@ -27,7 +27,7 @@ export const WelcomeSection = () => {
               <Image
                 // --- IMPORTANT ---
                 // Add your MAIN image to your /public folder and update this path
-                src="/Trial4.png" 
+                src="/Pendent1.jpg" 
                 alt="Elegant dining room with Spetraluce lighting"
                 fill
                 sizes="(max-width: 768px) 80vw, (max-width: 1024px) 75vw, 40vw"
@@ -40,7 +40,7 @@ export const WelcomeSection = () => {
               <Image
                 // --- IMPORTANT ---
                 // Add your DETAIL image to your /public folder and update this path
-                src="/trial1.jpg" 
+                src="/trial4.png" 
                 alt="Close-up of a Spetraluce light fixture"
                 fill
                 sizes="(max-width: 768px) 50vw, (max-width: 1024px) 60vw, 30vw"
