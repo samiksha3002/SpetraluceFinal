@@ -1,4 +1,4 @@
-// File: C:\Users\khush\SpetraluceFinal\SpetraluceFinal\app\productcategory\page.jsx
+// File: C:\Users\hp\git-test\SpetraluceFinal\app\productcategory\page.jsx
 import * as entry from '../../../../app/productcategory/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

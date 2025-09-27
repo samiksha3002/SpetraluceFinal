@@ -1,8 +1,7 @@
-// app/components/Hero.jsx
 "use client";
 
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 // --- YOUR VIDEO PLAYLIST ---
 const videos = [
@@ -15,32 +14,29 @@ const videos = [
 export const Hero = () => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
-  // This useEffect hook handles preloading the next video
+  // This useEffect hook preloads the next video for smoother transitions
   useEffect(() => {
-    // Determine the index of the next video to preload
     const nextVideoIndex = (currentVideoIndex + 1) % videos.length;
-    const nextVideoSrc = videos[nextVideoIndex];
+    const nextVideoUrl = videos[nextVideoIndex];
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'video';
+    link.href = nextVideoUrl;
+    document.head.appendChild(link);
 
-    // Create a new video element and set its source to preload it
-    const preloader = new Image(); // Using Image as a simple fetcher
-    preloader.src = nextVideoSrc;
-    
-    // Clean up the preloader to prevent memory leaks
     return () => {
-      preloader.src = '';
+      document.head.removeChild(link);
     };
-  }, [currentVideoIndex]); // Re-run this effect whenever the video index changes
+  }, [currentVideoIndex]);
 
   const handleVideoEnd = () => {
-    // It updates the index to the next video in the 'videos' array
     setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
   };
 
   return (
-    // This main container is full-screen and relative
     <section className="relative h-screen w-full overflow-hidden">
       
-      {/* === THE VIDEO PLAYER === */}
+      {/* Video Player */}
       <video
         key={currentVideoIndex}
         autoPlay
@@ -56,36 +52,67 @@ export const Hero = () => {
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/60 z-10"></div>
 
-      {/* HERO CONTENT */}
-      <div className="relative z-20 flex flex-col items-center justify-center 
-                      h-full text-center text-white px-6">
+      {/* --- Animated Hero Content (Using direct animation props) --- */}
+      <div className="relative z-20 flex flex-col items-center justify-center h-full text-center text-white px-6">
         
-        <span className="text-sm font-medium uppercase tracking-widest text-gray-300">
+        <motion.span 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+          className="text-sm font-medium uppercase tracking-widest text-gray-300"
+        >
           Welcome to Spetraluce
-        </span>
+        </motion.span>
 
-        <h1 className="font-serif text-5xl md:text-7xl font-bold mt-4">
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
+          className="font-serif text-5xl md:text-7xl font-bold mt-4"
+        >
           Modern Decorative Light
-        </h1>
+        </motion.h1>
 
-        <p className="mt-6 text-lg text-gray-200 max-w-xl mx-auto">
-          we transform spaces by blending cutting-edge lighting technology with refined design. Every fixture is crafted to create atmosphere, enhance architecture, and bring elegance to life.
-        </p>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.8 }}
+          className="mt-6 text-lg text-gray-200 max-w-xl mx-auto"
+        >
+          We transform spaces by blending cutting-edge lighting technology with refined design. Every fixture is crafted to create atmosphere, enhance architecture, and bring elegance to life.
+        </motion.p>
 
-        <div className="mt-10">
-          <Link
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 1.1 }}
+          className="mt-10"
+        >
+          <motion.a 
             href="/products"
             className="inline-block 
-                       bg-white text-gray-900 
-                       rounded-full
-                       px-10 py-3 text-sm font-medium uppercase tracking-wider 
-                       hover:bg-gray-200 
-                       transition-colors"
+                       bg-amber-500 
+                       text-gray-900 font-bold
+                       shadow-lg
+                       px-12 py-4 text-sm uppercase tracking-widest 
+                       hover:bg-amber-600 
+                       transition-colors duration-300"
+            animate={{
+              scale: [1, 1.08, 1],
+            }}
+            transition={{
+              duration: 2,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "loop",
+              delay: 2
+            }}
           >
-            VIEW CATALOG
-          </Link>
-        </div>
+            CATALOGO DELLE VISTE
+          </motion.a>
+        </motion.div>
       </div>
     </section>
   );
 };
+

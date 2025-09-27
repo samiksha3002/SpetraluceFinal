@@ -1,4 +1,4 @@
-// File: C:\Users\khush\SpetraluceFinal\SpetraluceFinal\app\contact\page.tsx
+// File: C:\Users\hp\git-test\SpetraluceFinal\app\contact\page.tsx
 import * as entry from '../../../../app/contact/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

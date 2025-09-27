@@ -1,10 +1,7 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/services/page": "app/services/page.js",
-  "/productcategory/page": "app/productcategory/page.js",
-  "/products/[slug]/page": "app/products/[slug]/page.js",
-  "/products/item/[id]/page": "app/products/item/[id]/page.js",
   "/page": "app/page.js",
   "/about/page": "app/about/page.js",
+  "/productcategory/page": "app/productcategory/page.js",
+  "/services/page": "app/services/page.js",
   "/contact/page": "app/contact/page.js"
 }
