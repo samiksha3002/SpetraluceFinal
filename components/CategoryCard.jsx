@@ -1,10 +1,51 @@
-// app/components/CategoryCard.jsx
+"use client";
+
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import Image from 'next/image';
 
-export const CategoryCard = ({ category, setActiveCategory }) => {
+// This is the new, highly interactive card component.
+export const CategoryCard = ({ category, onSelect }) => {
+  // Hooks for 3D tilt effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const handleMouseMove = (e) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - left - width / 2);
+    mouseY.set(e.clientY - top - height / 2);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  // Create transformed values for a subtle 3D rotation
+  const rotateX = useTransform(mouseY, [-150, 150], [8, -8]);
+  const rotateY = useTransform(mouseX, [-200, 200], [-8, 8]);
+
+  // Animation variants for the frosted glass overlay
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.4, ease: "easeOut" } }
+  };
+
+  // Staggered animation for text elements
+  const textContainerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1 } }
+  };
+  const textItemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+  };
+
   return (
-    <button 
-      onClick={() => setActiveCategory(category.id)}
+    <motion.button 
+      onClick={onSelect}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX, rotateY, perspective: 1000 }}
       className="group relative block w-full aspect-[4/3] rounded-xl overflow-hidden shadow-lg"
     >
       {/* 1. BACKGROUND IMAGE (Zooms *in* on hover) */}
@@ -18,31 +59,34 @@ export const CategoryCard = ({ category, setActiveCategory }) => {
                    group-hover:scale-110" // The image zooms in
       />
       
-      {/* 2. OVERLAY FOR TEXT CONTENT */}
-      {/* This entire div now acts as the frosted glass container */}
-      <div className="absolute inset-0 z-10 
-                       flex flex-col items-center justify-center p-6 sm:p-8 text-center
-                       bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 
-                       transition-opacity duration-300 ease-in-out">
-        
-        {/* --- WRITTEN CONTENT (Now always on a clear background) --- */}
-        <div className="relative z-20 // Ensures text is above the blurred backdrop
-                         text-white"> {/* Text color is set here */}
-          
-          <h3 className="text-3xl font-serif font-bold">
+      {/* 2. FROSTED GLASS OVERLAY with Framer Motion */}
+      <motion.div 
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 text-center bg-black/60 backdrop-blur-sm"
+        variants={overlayVariants}
+        initial="hidden"
+        whileHover="visible"
+      >
+        <motion.div 
+          className="relative z-20 text-white"
+          variants={textContainerVariants}
+        >
+          <motion.h3 variants={textItemVariants} className="text-3xl font-serif font-bold">
             {category.title}
-          </h3>
-          <p className="mt-2 text-sm text-white/90">
+          </motion.h3>
+          <motion.p variants={textItemVariants} className="mt-2 text-sm text-white/90">
             {category.shortDescription}
-          </p>
-
-          <span className="mt-4 inline-block px-5 py-2 border border-white/50 text-xs 
-                            font-medium uppercase tracking-widest rounded-full 
-                            group-hover:bg-white/10 transition-colors duration-200">
-            View Category
-          </span>
-        </div>
-      </div>
-    </button>
+          </motion.p>
+          <motion.div variants={textItemVariants} className="mt-4">
+            <span className="inline-block px-5 py-2 border border-white/50 text-xs 
+                             font-medium uppercase tracking-widest rounded-full 
+                             group-hover:bg-spetra-orange-500 group-hover:border-spetra-orange-500 group-hover:text-black
+                             transition-colors duration-300">
+              View Category
+            </span>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.button>
   );
 };
+

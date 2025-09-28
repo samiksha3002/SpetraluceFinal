@@ -2,15 +2,23 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'; 
+import { usePathname } from 'next/navigation';
+import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+import MegaMenu from './MegaMenu';
 
 // --- SUB-COMPONENTS (These are unchanged) ---
-
-// 1. TOP BAR
 const TopBar = () => {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   return (
-    <div className="bg-black text-gray-400 text-xs py-2.5 px-6">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-center">
+    <div className="bg-black text-gray-400 text-xs relative">
+      <div className="container mx-auto h-10 flex flex-col md:flex-row justify-between items-center text-center px-6">
         <Link href="/products" className="uppercase tracking-wider hover:text-white transition-colors">
           Designing with light for modern living
         </Link>
@@ -18,60 +26,42 @@ const TopBar = () => {
           Contact Info – +39 345 588 2002
         </Link>
       </div>
+      <motion.div 
+        className="absolute top-0 left-0 right-0 h-full bg-spetra-orange-500/80 origin-left z-0" 
+        style={{ scaleX }} 
+      />
     </div>
   );
 };
-
-// 2. SEARCH BAR (We will place this inside the main nav for this layout)
-const SearchBar = ({ isScrolled }: { isScrolled: boolean }) => {
+const SearchBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const iconColorClass = isScrolled 
-    ? "text-gray-600 hover:text-black"
-    : "text-gray-300 hover:text-white";
+  const iconColorClass = "text-gray-300 hover:text-white";
 
   if (isOpen) {
     return (
       <div className="relative flex items-center">
-        <input 
-          type="text" 
-          placeholder="Search..." 
-          autoFocus
-          className="pl-4 pr-10 py-2 w-48 text-sm bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-spetra-orange-500" 
-        />
-        <button 
-          onClick={() => setIsOpen(false)} 
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black"
-          aria-label="Close Search"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+        <input type="text" placeholder="Search..." autoFocus className="pl-4 pr-10 py-2 w-48 text-sm bg-gray-800 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-spetra-orange-500" />
+        <button onClick={() => setIsOpen(false)} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white" aria-label="Close Search">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
     );
   }
-
   return (
-    <button 
-      onClick={() => setIsOpen(true)}
-      className={`transition-colors ${iconColorClass}`}
-      aria-label="Open Search"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-      </svg>
+    <button onClick={() => setIsOpen(true)} className={`transition-colors ${iconColorClass}`} aria-label="Open Search">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
     </button>
   );
 };
 
-
-// --- 3. MAIN HEADER COMPONENT (WITH NEW LAYOUT) ---
+// --- MAIN INTERACTIVE HEADER COMPONENT ---
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
-  // Scroll logic is unchanged
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -87,86 +77,74 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  // Dynamic colors for links
-  const linkColorClass = isScrolled ? "text-gray-900" : "text-white";
-  const underlineColorClass = isScrolled ? "bg-spetra-orange-500" : "bg-spetra-orange-400";
+  const linkColorClass = "text-white"; 
+  const underlineColorClass = "bg-spetra-orange-400";
 
   return (
     <header 
-      className={`fixed top-0 z-50 w-full transition-all duration-300 ease-in-out
-                  ${isVisible ? 'translate-y-0' : '-translate-y-full'}
-                  ${isScrolled ? 'shadow-lg' : ''}`}
+      className={`fixed top-0 z-50 w-full transition-all duration-300 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
+      onMouseLeave={() => setIsMenuOpen(false)}
     > 
-      
       <TopBar />
-
-      {/* Main Navigation - NEW 2-COLUMN LAYOUT */}
-      <nav className={`container mx-auto px-6 py-4 
-                      flex justify-between items-center
-                      transition-colors duration-300
-                      ${isScrolled ? 'bg-white/80 backdrop-blur-md dark:bg-black/80' : 'bg-transparent'}`}>
+      <nav className={`relative container mx-auto px-6 flex justify-between items-center transition-all duration-300 ${isScrolled ? 'py-2 bg-black/80 backdrop-blur-md shadow-lg' : 'py-4 bg-transparent'}`}>
         
-        {/* === 1. LEFT SIDE: BIGGER LOGO === */}
         <div>
           <Link href="/">
-            {/* BLACK LOGO (Visible when scrolled) */}
-            <Image
-              src="/Logo-black.png" 
-              alt="Spetraluce Logo"
-              width={260} // <-- BIGGER SIZE
-              height={95}
-              priority
-              className={`${isScrolled ? 'block' : 'hidden'}`}
-            />
-            {/* WHITE LOGO (Visible at top on hero) */}
             <Image
               src="/Logo.png" 
               alt="Spetraluce Logo"
-              width={260} // <-- BIGGER SIZE
-              height={95}
+              width={isScrolled ? 180 : 260}
+              height={isScrolled ? 65 : 95}
               priority
-              className={`${isScrolled ? 'hidden' : 'block'}`}
+              className="block transition-all duration-300" 
             />
           </Link>
         </div>
 
-        {/* === 2. RIGHT SIDE: BIG & BOLD NAV ITEMS (Left-aligned in their column) === */}
         <div className="flex items-center gap-8">
-          <ul className="hidden md:flex items-center space-x-12"> {/* Increased spacing */}
-            <li>
-              <Link href="/" className={`group relative text-xl font-semibold ${linkColorClass} transition-colors whitespace-nowrap`}> {/* text-xl & font-semibold */}
-                <span>Home</span>
-                <span className={`absolute -bottom-1 left-0 w-full h-0.5 ${underlineColorClass} scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center`}></span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" className={`group relative text-xl font-semibold ${linkColorClass} transition-colors whitespace-nowrap`}> {/* text-xl & font-semibold */}
-                <span>About Us</span>
-                <span className={`absolute -bottom-1 left-0 w-full h-0.5 ${underlineColorClass} scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center`}></span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/productcategory" className={`group relative text-xl font-semibold ${linkColorClass} transition-colors whitespace-nowrap`}> {/* text-xl & font-semibold */}
-                <span>Products</span>
-                <span className={`absolute -bottom-1 left-0 w-full h-0.5 ${underlineColorClass} scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center`}></span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/services" className={`group relative text-xl font-semibold ${linkColorClass} transition-colors whitespace-nowrap`}> {/* text-xl & font-semibold */}
-                <span>Services</span>
-                <span className={`absolute -bottom-1 left-0 w-full h-0.5 ${underlineColorClass} scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center`}></span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact" className={`group relative text-xl font-semibold ${linkColorClass} transition-colors whitespace-nowrap`}> {/* text-xl & font-semibold */}
-                <span>Contact</span>
-                <span className={`absolute -bottom-1 left-0 w-full h-0.5 ${underlineColorClass} scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center`}></span>
-              </Link>
-            </li>
+          <ul className="hidden md:flex items-center space-x-12">
+            {[
+              { href: "/", label: "Home" },
+              { href: "/about", label: "About Us" },
+              { href: "/productcategory", label: "Products" },
+              { href: "/services", label: "Services" },
+              { href: "/contact", label: "Contact" },
+            ].map((item) => {
+              const isActive = pathname === item.href;
+              
+              // --- THIS IS THE FIX ---
+              if (item.label === "Products") {
+                return (
+                  // The parent <li> handles the hover event
+                  <li key={item.href} onMouseEnter={() => setIsMenuOpen(true)}>
+                    {/* The <Link> component inside handles the click for navigation */}
+                    <Link href={item.href} className={`group relative text-xl font-semibold ${linkColorClass} transition-colors whitespace-nowrap`}>
+                      <span>{item.label}</span>
+                      <span 
+                        className={`absolute -bottom-1 left-0 w-full h-0.5 ${underlineColorClass} transition-transform duration-300 origin-center ${isActive || isMenuOpen ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}
+                      ></span>
+                    </Link>
+                  </li>
+                );
+              }
+
+              // All other links remain as they were
+              return (
+                <li key={item.href}>
+                  <Link href={item.href} className={`group relative text-xl font-semibold ${linkColorClass} transition-colors whitespace-nowrap`}>
+                    <span>{item.label}</span>
+                    <span className={`absolute -bottom-1 left-0 w-full h-0.5 ${underlineColorClass} transition-transform duration-300 origin-center ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
-          <SearchBar isScrolled={isScrolled} />
+          <SearchBar />
         </div>
         
+        <AnimatePresence>
+          {isMenuOpen && <MegaMenu />}
+        </AnimatePresence>
       </nav>
     </header>
   );

@@ -1,15 +1,15 @@
-// app/components/ProductBrowser.jsx
 "use client"; 
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CategoryCard } from './CategoryCard';
 import { CategorySection } from './CategorySection';
 
-// --- Placeholder Data ---
+// --- Data with updated, more descriptive content ---
 const categories = [
   { 
     id: "indoor",
-    title: "Indoor",
+    title: "Indoor Lighting",
     shortDescription: "Crafted to transform interior spaces.",
     description: "Our indoor collection blends timeless elegance with modern function. Each piece is designed to be the focal point of your room, creating ambiance and warmth.",
     cardImage: "/IndoorHero.png", 
@@ -19,7 +19,7 @@ const categories = [
   },
   { 
     id: "outdoor",
-    title: "Outdoor",
+    title: "Outdoor Solutions",
     shortDescription: "Durable, weatherproof, and beautiful.",
     description: "Our outdoor solutions withstand the elements while casting your architecture and landscape features in a stunning, secure light. Durable, weatherproof, and beautifully designed.",
     cardImage: "/OutdoorHero.png", 
@@ -29,7 +29,7 @@ const categories = [
   },
   { 
     id: "industrial",
-    title: "Industrial",
+    title: "Industrial Performance",
     shortDescription: "High-output performance meets design.",
     description: "Our industrial line offers high-output, efficient, and robust lighting for warehouses, offices, and retail spaces without compromising on the aesthetic. Performance meets design.",
     cardImage: "/IndustrialHero.png", 
@@ -39,98 +39,83 @@ const categories = [
   },
 ];
 
-// This helper component is unchanged and correct
-const ActiveCategorySection = ({ categoryId }) => {
-  const category = categories.find(c => c.id === categoryId);
-  if (!category) return null;
-
-  return (
-    <CategorySection
-      id={category.id}
-      title={category.title}
-      description={category.description}
-      imageUrl={category.heroImage}
-      layoutDirection={category.layout}
-      productsLink={category.productsLink}
-    />
-  );
-};
+const filters = ["All Products", "Indoor", "Outdoor", "Industrial"];
 
 // --- Main Browser Component ---
 export const ProductBrowser = () => {
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [transitioning, setTransitioning] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('All Products');
 
-  const handleCategoryChange = (categoryId) => {
-    // Only start a new transition if not already in one
-    if (activeCategory === categoryId || transitioning) return;
-
-    setTransitioning(true);
-    // Use a small delay to allow the fade-out transition to start
-    setTimeout(() => {
-      setActiveCategory(categoryId);
-      // Wait for the new component to render, then fade it in
-      setTimeout(() => {
-        setTransitioning(false);
-      }, 300); // This should match the fade-in transition duration
-    }, 300); // This should match the fade-out transition duration
-  };
+  const getCategoryByTitle = (title) => categories.find(c => c.title.toLowerCase().startsWith(title.toLowerCase()));
 
   return (
-    <section className="bg-white dark:bg-gray-900 py-24 sm:py-32">
+    <section 
+        className="bg-black text-white py-24 sm:py-32"
+        style={{ backgroundImage: 'radial-gradient(circle at top, rgba(255, 152, 0, 0.05), transparent 40%)' }}
+    >
       <div className="container mx-auto px-6">
         
-        {/* Elegant Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 mb-16">
-          <FilterButton label="All Products" isActive={activeCategory === 'all'} onClick={() => handleCategoryChange('all')} />
-          <FilterButton label="Indoor" isActive={activeCategory === 'indoor'} onClick={() => handleCategoryChange('indoor')} />
-          <FilterButton label="Outdoor" isActive={activeCategory === 'outdoor'} onClick={() => handleCategoryChange('outdoor')} />
-          <FilterButton label="Industrial" isActive={activeCategory === 'industrial'} onClick={() => handleCategoryChange('industrial')} />
+        <motion.h2 
+            className="font-serif text-4xl md:text-5xl font-bold text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+        >
+            
+        </motion.h2>
+        
+        <div className="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 mb-16">
+          {filters.map(filter => (
+            <FilterButton 
+              key={filter} 
+              label={filter} 
+              isActive={activeCategory === filter} 
+              onClick={() => setActiveCategory(filter)} 
+            />
+          ))}
         </div>
 
-        {/* === THE DYNAMIC CONTENT === */}
-        <div 
-          key={activeCategory} // Key prop to force re-render and animation
-          className={`
-            transition-opacity duration-300 ease-in-out
-            ${transitioning ? 'opacity-0' : 'opacity-100'}
-          `}
-        >
-          {activeCategory === 'all' ? (
-            <div className="flex flex-col md:flex-row gap-8">
-              <div className="md:w-1/3">
-                <CategoryCard category={categories[0]} setActiveCategory={setActiveCategory} />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            {activeCategory === 'All Products' ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {categories.map(cat => (
+                    <CategoryCard key={cat.id} category={cat} onSelect={() => setActiveCategory(cat.title.split(' ')[0])} />
+                ))}
               </div>
-              <div className="md:w-1/3">
-                <CategoryCard category={categories[1]} setActiveCategory={setActiveCategory} />
-              </div>
-              <div className="md:w-1/3">
-                <CategoryCard category={categories[2]} setActiveCategory={setActiveCategory} />
-              </div>
-            </div>
-          ) : (
-            <ActiveCategorySection categoryId={activeCategory} />
-          )}
-        </div>
+            ) : (
+              <CategorySection category={getCategoryByTitle(activeCategory)} />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );
 };
 
-// --- ELEGANT FILTER BUTTON (Unchanged and Correct) ---
+// --- Premium Filter Button with Sliding Effect ---
 const FilterButton = ({ label, isActive, onClick }) => {
   return (
     <button 
       onClick={onClick}
-      className={`relative text-xl font-serif tracking-wide transition-colors pb-2
-                  ${isActive 
-                    ? 'text-gray-900 dark:text-white' 
-                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}
+      className={`relative text-lg font-medium tracking-wide transition-colors px-5 py-2 rounded-full
+                ${isActive ? 'text-black' : 'text-gray-400 hover:text-white'}`}
     >
-      {label}
       {isActive && (
-        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900 dark:bg-white"></span>
+        <motion.span
+          layoutId="active-pill"
+          className="absolute inset-0 z-0 bg-spetra-orange-500 rounded-full"
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        />
       )}
+      <span className="relative z-10">{label}</span>
     </button>
   );
 };
+

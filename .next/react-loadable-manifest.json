@@ -1,4 +1,10 @@
 {
+  "components\\Preloader.jsx -> lazy-line-painter": {
+    "id": "components\\Preloader.jsx -> lazy-line-painter",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_lazy-line-painter_lib_lazy-line-painter-2_0_3_js.js"
+    ]
+  },
   "node_modules\\next\\dist\\client\\dev\\hot-reloader\\app\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts": {
     "id": "node_modules\\next\\dist\\client\\dev\\hot-reloader\\app\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts",
     "files": [

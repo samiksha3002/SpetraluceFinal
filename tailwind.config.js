@@ -14,7 +14,7 @@ module.exports = {
         serif: ['var(--font-playfair)', 'serif'],
       },
 
-      // 2. REFINED COLOR PALETTE
+      // 2. REFINED COLOR PALETTE (Unchanged)
       colors: {
         'spetra-orange': {
           '50': '#fff8e1',
@@ -22,13 +22,12 @@ module.exports = {
           '200': '#ffd54f',
           '300': '#ffb74d',
           '400': '#ffa726',
-          '500': '#ff9800', // Main Orange (Replace with your hex code)
+          '500': '#ff9800',
           '600': '#fb8c00',
           '700': '#f57c00',
           '800': '#ef6c00',
           '900': '#e65100',
         },
-        // A custom, elegant neutral palette for our theme
         neutral: {
           '50': '#fafafa',
           '100': '#f5f5f5',
@@ -38,15 +37,15 @@ module.exports = {
           '500': '#737373',
           '600': '#525252',
           '700': '#404040',
-          '800': '#262626', // Good for dark cards
-          '900': '#171717', // Good for dark backgrounds
-          '950': '#0a0a0a', // Almost pure black
+          '800': '#262626',
+          '900': '#171717',
+          '950': '#0a0a0a',
         },
       },
 
-      // 3. MORE ANIMATIONS
+      // 3. MORE ANIMATIONS (UPDATED)
       keyframes: {
-        // Old animations
+        // --- Existing animations ---
         fadeIn: {
           '0%': { opacity: 0, transform: 'translateY(10px)' },
           '100%': { opacity: 1, transform: 'translateY(0)' },
@@ -55,7 +54,6 @@ module.exports = {
           '0%': { opacity: 0, transform: 'translateY(20px)' },
           '100%': { opacity: 1, transform: 'translateY(0)' },
         },
-        // New slide-in animations
         slideInFromLeft: {
           '0%': { transform: 'translateX(-100%)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' },
@@ -64,14 +62,22 @@ module.exports = {
           '0%': { transform: 'translateX(100%)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' },
         },
+        
+        // --- 👇 NEWLY ADDED ANIMATION ---
+        'pulse-slow': {
+            '0%, 100%': { transform: 'scale(1)' },
+            '50%': { transform: 'scale(1.07)' },
+        },
       },
       animation: {
-        // Old animations
+        // --- Existing animations ---
         fadeIn: 'fadeIn 0.5s ease-in-out forwards',
         fadeInUp: 'fadeInUp 1s ease-out forwards',
-        // New animation utilities
         slideInFromLeft: 'slideInFromLeft 1s ease-out forwards',
         slideInFromRight: 'slideInFromRight 1s ease-out forwards',
+
+        // --- 👇 NEWLY ADDED UTILITY ---
+        'pulse-slow': 'pulse-slow 8s ease-in-out infinite',
       }
     },
   },
